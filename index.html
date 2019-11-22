@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<title>WYS Test</title>
+	<link rel="stylesheet" href="//cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css">
+	<script src="jquery.min.js"></script>
+	<script src="wys.js"></script>
+	<style>
+	  img {max-height: 100%;max-width: 100%;}
+	  a {text-decoration: none ;}
+	  a:hover{color:white;text-decoration:none;cursor:pointer;}
+
+	  .navbarr {list-style-type:none;margin:0 0 0 4px;padding:0;overflow:hidden}
+	  .navbarr li{float:left;background-color:none;margin:3px 3px 3px 0;}
+	  .navbarr li a{display:block;padding:1px 5px;background-color: none;color:#999 !important;}
+	  .navbarr li a:hover{background-color: #f1f1f1 !important;color: #666666 !important}
+
+	 .iconsize{font-size: 25px !important;}
+	 .yellocolr{color: yellow;}
+	 #sourceText {padding: 35px 15px 15px 15px;min-height: 100px;}
+	</style>
+  </head>
+
+  <body onload="initDoc();" id="main">
+	<form name="compForm" method="post" action="sample.php" onsubmit="if(validateMode()){this.myDoc.value=oDoc.innerHTML;return true;}return false;">
+	  <input type="hidden" name="myDoc">
+	  <div style="width:100%;height:auto;background-color: none;float:left;border: 2px solid #999;">
+		<div style="width:100%;border-bottom: 2px solid #999;height:auto;float: left;background-color: #fbfbfb;">
+		  <ul class="navbarr">
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-undo iconsize wsy-act-trigger" id="wys_undo"></i>
+			  </a>
+			</li>
+			
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-redo iconsize wsy-act-trigger" id="wys_redo"></i>
+			  </a>
+			</li>
+			
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-format-bold iconsize wsy-act-trigger" id="wys_bold"></i>
+			  </a>
+			</li>
+			
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-link-variant iconsize wsy-act-trigger" id="wys_link"></i>
+			  </a>
+			</li>
+			
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-format-italic iconsize wsy-act-trigger" id="wys_italic"></i>
+			  </a>
+			</li>
+			
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-format-underline iconsize wsy-act-trigger" id="wys_underline"></i>
+			  </a>
+			</li>
+			
+			<li>
+			  <a href="#">
+				<label for="fileElem">
+				  <i class="mdi mdi-image-plus iconsize wsy-act-trigger" id="wys_paperclip"></i>
+				</label>
+			  </a>
+			</li>
+
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-format-align-justify iconsize wsy-act-trigger" id="wys_justify"></i>
+			  </a>
+			</li>
+			
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-format-align-left iconsize wsy-act-trigger" id="wys_justifyleft"></i>
+			  </a>
+			</li>
+			
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-format-align-center iconsize wsy-act-trigger" id="wys_justifycenter"></i>
+			  </a>
+			</li>
+			
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-format-align-right iconsize wsy-act-trigger" id="wys_justifyright"></i>
+			  </a>
+			</li>
+
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-format-quote-open iconsize wsy-act-trigger" id="wys_quote"></i>
+			  </a>
+			</li>
+			
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-format-list-bulleted iconsize wsy-act-trigger" id="wys_insertunorderedlist"></i>
+			  </a>
+			</li>
+			
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-format-list-numbers iconsize wsy-act-trigger" id="wys_insertorderedlist"></i>
+			  </a>
+			</li>
+
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-format-indent-decrease iconsize wsy-act-trigger" id="wys_indent"></i>
+			  </a>
+			</li>
+			
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-format-indent-increase iconsize wsy-act-trigger" id="wys_outdent"></i>
+			  </a>
+			</li>
+			
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-content-cut iconsize wsy-act-trigger" id="wys_cut"></i>
+			  </a>
+			</li>
+						
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-code-string iconsize wsy-act-trigger" id="wys_source"></i>
+			  </a>
+			</li>
+						
+			<input type="hidden" id="edmode" name="edmode">
+			<li>
+			  <a href="#">
+				<i class="mdi mdi-code-tags iconsize wsy-act-trigger" id="wys_codetag"></i>
+			  </a>
+		    </li>
+		  </ul>
+		</div>
+		<div contentEditable="true" style="padding: 50px 15px 15px 15px;;min-height: 100px;" id="textBox">Contribute . . . </div>
+		<input type="file" id="fileElem" multiple accept="image/*" style="display:none">
+		<input type="text" id="imgpile" name="imgpile" style="display:none">
+	  </div>
+	  <p>
+		<input type="submit" value="Send" />
+	  </p>
+	</form>
+
+	<script>
+	  const initWys = () => {
+		document.querySelectorAll(".wsy-act-trigger").forEach((e) => {
+	      e.addEventListener('click', c => {
+		    if (c.target.id === "wys_paperclip") {
+			  let fileObj = document.getElementById('fileElem');
+			  let txtareaval = document.getElementById('textBox');
+			  
+			  fileObj.addEventListener('change', e => {
+			    let files = fileObj.files;
+			    
+				for (var i = 0; i < files.length; i++) {
+			      var file = files[i];
+				  
+				  if (!file.type.startsWith('image/')){ continue }
+				  
+				  let curImgTrack = document.getElementById("imgpile").value;
+				  let itrimg = file['name']+"~~~"+file['size']+"~~~"+file['type'];
+				  
+				  if (curImgTrack) {
+				    let eachImg = curImgTrack.split("~~~~");
+					if (eachImg) {
+					  for (let i=0; i<eachImg.length; i+=1) {
+						if (eachImg[i] == itrimg) {
+						  file = null;
+					    }
+					  }
+				    }
+				  }
+				  
+				  let curImga = curImgTrack+"~~~~"+file['name']+"~~~"+file['size']+"~~~"+file['type'];
+				  document.getElementById("imgpile").value = curImga;
+
+				  //dynamically add an image and set its attribute
+				  var img  = document.createElement("img");
+				  img.classList.add("postImages");
+				  img.file = file;
+				  txtareaval.appendChild(img);
+
+				  var reader      = new FileReader();
+				  reader.onload   = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
+				  reader.readAsDataURL(file);
+			    }
+
+			    let postImages = document.querySelectorAll(".postImages");
+			    if (postImages) 
+			    {
+				  postImages.forEach((postImg) => {/*console.log(postImg['src']);*/});
+			    }
+			  });
+		    }
+			else if (c.target.id === "wys_link") 
+			{
+			  var sLnk = prompt('Write the URL here','http:\/\/');
+			  if (sLnk && sLnk !='' && sLnk != 'http://') formatDoc('createlink',sLnk); //underline
+			}
+			else if (c.target.id === "wys_quote")
+			{
+			  formatDoc('formatblock','blockquote');
+			}
+			else if (c.target.id === "wys_source") 
+			{
+			  let edmode = document.getElementById("edmode").value;
+			  let modeFlag = (edmode) ? false : true;
+			  let modeVal = (edmode) ? "" : 1; 
+			  
+			  document.getElementById("edmode").value = modeVal
+			  setDocMode(modeFlag);
+			}
+		    else 
+		    {
+			  formatDoc(c.target.id.split("_")[1]);
+		    } 
+		  });
+		});
+	  };
+	  initWys();
+	</script>
+  </body>
+</html>
